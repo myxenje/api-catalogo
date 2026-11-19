@@ -1,0 +1,36 @@
+services:
+  db:
+    restart: always
+    image: postgres:16-alpine
+    container_name: catalogo-db
+    env_file:
+      - db.env
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER:-postgres}\" -d \"$${POSTGRES_DB:-postgres}\""]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  api:
+    restart: always
+    build: .
+    container_name: catalogo-api
+    env_file:
+      - api.env
+    ports:
+      - 3000:3000
+    entrypoint:
+      - sh
+      - -c
+      - |
+        npm run migrate
+        npm run seed || echo "[local] seed ja aplicado, seguindo..."
+        exec node src/server.js
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  pgdata:
