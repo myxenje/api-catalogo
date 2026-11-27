@@ -1,4 +1,4 @@
-# 🛒 API Catálogo — API REST de produtos na AWS
+# 🛒 API Catálogo
 
 ## 📖 Sobre o projeto
 
@@ -32,41 +32,11 @@ O foco do projeto é a **infraestrutura em nuvem**: rede própria (VPC com subne
 
 ---
 
-## 🏗 Arquitetura na AWS
+## 🏗 Arquitetura
 
-```mermaid
-flowchart LR
-    DEV([Desenvolvedor]) -->|git push| GH[GitHub]
-    USER([Cliente / Postman]) -->|HTTP :80| ALB
+![Arquitetura do API Catálogo](docs/images/arq-api-catalogo-aws.png)
 
-    subgraph CICD[CI/CD]
-        direction TB
-        CP[CodePipeline] --> CB[CodeBuild]
-        CB -->|docker push| ECR[(Amazon ECR)]
-    end
-
-    GH -->|GitHub App| CP
-    CP -->|UpdateService| ECS
-
-    subgraph VPC[VPC 10.0.0.0/16 - us-east-1]
-        subgraph PUB[Subnets públicas]
-            ALB[Application Load Balancer]
-            NAT[NAT Gateway]
-        end
-        subgraph PRIV[Subnets privadas]
-            ECS[ECS Fargate<br/>2 tasks - porta 3000]
-            RDS[(RDS PostgreSQL<br/>porta 5432)]
-        end
-    end
-
-    ALB -->|TCP 3000| ECS
-    ECS -->|TCP 5432| RDS
-    ECS -.->|saída 443 via NAT| NAT
-    ECR -.->|pull da imagem| ECS
-    SM[Secrets Manager] -.->|credenciais do DB| ECS
-```
-
-> O diagrama completo (com CIDRs, Security Groups, IAM e rotas) está em [`docs/arq-api-catalogo.drawio`](docs/arq-api-catalogo.drawio) e pode ser aberto em [app.diagrams.net](https://app.diagrams.net).
+O diagrama em draw.io (com CIDRs, Security Groups, IAM e rotas) está em [`docs/images/arq-api-catalogo-aws.drawio`](docs/images/arq-api-catalogo-aws.drawio) e pode ser aberto em [app.diagrams.net](https://app.diagrams.net).
 
 ### Fluxo de uma requisição
 
