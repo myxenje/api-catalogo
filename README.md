@@ -297,4 +297,4 @@ A aplicação segue uma arquitetura em camadas: **routes → controllers → ser
 
 Michel Cardoso
 
-Projeto desenvolvido para fins de estudo e prática de tecnologias voltadas para desenvolvimento back-end, infraestrutura, aws cloud e containerização.
+Projeto desenvolvido para fins de estudo e prática de tecnologias voltadas para desenvolvimento BackEnd, infraestrutura, aws cloud e containerização.
